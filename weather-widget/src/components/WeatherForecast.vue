@@ -15,7 +15,7 @@ async function fetchWeather() {
   try {
     const timing = createTiming();
     const result = await getForecast(
-      { lat: 40.758, long: -73.9855 },
+      { lat: 53.2194, long: 6.5665 },
       timesteps,
       timing,
       fieldNames,
