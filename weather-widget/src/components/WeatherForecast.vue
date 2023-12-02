@@ -28,12 +28,14 @@ async function refreshData() {
     <div v-if="forecast">
       <div>
         <h2>Hourly</h2>
-        <ForecastPrediction
-          v-for="(prediction, i) in forecast.hourly.splice(0, 12)"
-          :key="`prediction_${i}`"
-          :time="prediction.time"
-          :prediction="prediction.values"
-        ></ForecastPrediction>
+        <div class="flex gap-3">
+          <ForecastPrediction
+            v-for="(prediction, i) in forecast.hourly.splice(0, 12)"
+            :key="`prediction_${i}`"
+            :time="prediction.time"
+            :prediction="prediction.values"
+          ></ForecastPrediction>
+        </div>
       </div>
     </div>
   </div>
