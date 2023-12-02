@@ -12,6 +12,9 @@
     "test:once": "vitest run"
   },
   "dependencies": {
+    "axios": "^1.6.2",
+    "moment": "^2.29.4",
+    "query-string": "^8.1.0",
     "vue": "^3.3.8"
   },
   "devDependencies": {
