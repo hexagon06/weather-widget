@@ -9,12 +9,14 @@ const failure = ref(false);
 const forecast = ref<Timelines | null>(null);
 const location = ref<string | null>(null);
 watch(location, () => refreshData());
+const locationName = ref<string>();
 
 async function refreshData() {
   try {
     if (location.value) {
       const result = await getForecast(location.value);
       forecast.value = result.timelines;
+      locationName.value = result.location.name;
     }
   } catch (e) {
     failure.value = true;
@@ -24,8 +26,7 @@ async function refreshData() {
 
 <template>
   <div>
-    <button @click="refreshData">Fetch!</button>
-    <LocationPicker v-model="location" />
+    <p class="text-2xl font-bold">{{ locationName }}</p>
     <p v-if="failure">Oh noes! something went wrong</p>
     <div v-if="forecast">
       <div>
@@ -40,5 +41,6 @@ async function refreshData() {
         </div>
       </div>
     </div>
+    <LocationPicker v-model="location" />
   </div>
 </template>
