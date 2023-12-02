@@ -1,8 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
-import { WeatherResponse, WeatherValues } from './response-types';
+import { WeatherResponse, WeatherValues } from './tomorrowio-timeline';
 import { tomorrowioConfig } from './tomorrowio-config';
 import { paramsSerializer } from './params-serializer';
 import { RequestTiming, RequestLocation } from './request-types';
+import { ForecastResponse } from './tomorrowio-forecast';
 
 const corsAnywhere = 'https://cors-anywhere.herokuapp.com/';
 
@@ -20,7 +21,7 @@ const corsAnywhere = 'https://cors-anywhere.herokuapp.com/';
  * @param timezone The timezone parameter displays the response datetime in the requested timezone.
  * @returns A weather response
  */
-export async function getForecast(
+export async function getTimeline(
   location: RequestLocation,
   timesteps: string[],
   timing: RequestTiming,
@@ -43,6 +44,26 @@ export async function getForecast(
     WeatherResponse,
     AxiosResponse<WeatherResponse>
   >(`${corsAnywhere}${tomorrowioConfig.getTimelineURL}`, {
+    params,
+    paramsSerializer,
+  });
+
+  return response.data;
+}
+
+export async function getForecast(location: RequestLocation) {
+  const { lat, long } = location;
+  const { apikey, units } = tomorrowioConfig;
+  const params = {
+    apikey,
+    units,
+    location: [lat, long],
+  };
+
+  const response = await axios.get<
+    ForecastResponse,
+    AxiosResponse<ForecastResponse>
+  >(`${corsAnywhere}${tomorrowioConfig.getForecastURL}`, {
     params,
     paramsSerializer,
   });

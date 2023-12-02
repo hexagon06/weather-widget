@@ -1,4 +1,4 @@
-import { WeatherValues } from './response-types';
+import { WeatherValues } from './tomorrowio-timeline';
 
 export type RequestTiming = { startTime: string; endTime: string };
 
