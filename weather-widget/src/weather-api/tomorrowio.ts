@@ -28,12 +28,11 @@ export async function getTimeline(
   fields: (keyof WeatherValues)[],
   timezone: string,
 ) {
-  const { lat, long } = location;
   const { apikey, units } = tomorrowioConfig;
   const params = {
     apikey,
     units,
-    location: [lat, long],
+    location,
     fields,
     timesteps,
     ...timing,
@@ -52,12 +51,11 @@ export async function getTimeline(
 }
 
 export async function getForecast(location: RequestLocation) {
-  const { lat, long } = location;
   const { apikey, units } = tomorrowioConfig;
   const params = {
     apikey,
     units,
-    location: [lat, long],
+    location,
   };
 
   const response = await axios.get<

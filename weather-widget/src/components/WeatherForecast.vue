@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { getForecast } from '../weather-api/tomorrowio';
-import {
-  ForecastLocation,
-  Timelines,
-} from '../weather-api/tomorrowio-forecast';
+import { Timelines } from '../weather-api/tomorrowio-forecast';
 import ForecastPrediction from './ForecastPrediction.vue';
+import LocationPicker from './LocationPicker.vue';
+
 const failure = ref(false);
 const forecast = ref<Timelines | null>(null);
-const location = ref<ForecastLocation>();
+const location = ref<string | null>(null);
+watch(location, () => refreshData());
+const locationName = ref<string>();
 
 async function refreshData() {
   try {
-    const result = await getForecast({ lat: 53.2194, long: 6.5665 });
-    forecast.value = result.timelines;
-    location.value = result.location;
+    if (location.value) {
+      const result = await getForecast(location.value);
+      forecast.value = result.timelines;
+      locationName.value = result.location.name;
+    }
   } catch (e) {
     failure.value = true;
   }
@@ -23,7 +26,7 @@ async function refreshData() {
 
 <template>
   <div>
-    <button @click="refreshData">Fetch!</button>
+    <p class="text-2xl font-bold">{{ locationName }}</p>
     <p v-if="failure">Oh noes! something went wrong</p>
     <div v-if="forecast">
       <div>
@@ -38,5 +41,6 @@ async function refreshData() {
         </div>
       </div>
     </div>
+    <LocationPicker v-model="location" />
   </div>
 </template>

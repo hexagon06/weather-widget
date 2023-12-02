@@ -17,7 +17,8 @@ export const fieldNames: (keyof WeatherValues)[] = [
   'weatherCode',
 ];
 
-export type RequestLocation = {
-  lat: number;
-  long: number;
-};
+export type RequestLocation = string;
+// | {
+//     lat: number;
+//     long: number;
+//   };
