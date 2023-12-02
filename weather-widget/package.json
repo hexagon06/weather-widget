@@ -12,6 +12,7 @@
     "test:once": "vitest run"
   },
   "dependencies": {
+    "@vueuse/core": "^10.6.1",
     "axios": "^1.6.2",
     "moment": "^2.29.4",
     "query-string": "^8.1.0",
