@@ -24,7 +24,13 @@ async function refreshData() {
   }
 }
 
-const upcomingHours = computed(() => forecast.value?.hourly.slice(0, 6));
+const hourlyInterval = 3;
+const upcomingHours = computed(
+  () =>
+    forecast.value?.hourly
+      .filter((_, i) => i % hourlyInterval === 0)
+      .slice(0, 6),
+);
 </script>
 
 <template>
@@ -32,24 +38,16 @@ const upcomingHours = computed(() => forecast.value?.hourly.slice(0, 6));
     <LocationPicker v-model="location" />
     <p class="text-2xl font-bold">{{ locationName }}</p>
     <p v-if="failure">Oh noes! something went wrong</p>
-    <div v-if="forecast">
-      <div class="mt-3">
-        <!-- <div class="flex gap-2">
-          <ForecastPrediction
-            v-for="(prediction, i) in upcomingHours"
-            :key="`prediction_${i}`"
-            :time="prediction.time"
-            :prediction="prediction.values"
-          ></ForecastPrediction>
-        </div> -->
-        <div class="grid grid-cols-5 grid-flow-col">
-          <ForecastPrediction
-            v-for="(prediction, i) in upcomingHours"
-            :key="`prediction_${i}`"
-            :time="prediction.time"
-            :prediction="prediction.values"
-          ></ForecastPrediction>
-        </div>
+    <div v-if="forecast" class="mt-3 flex">
+      <div
+        class="grid grid-rows-[1fr_150px_1fr_1fr] grid-flow-col gap-x-4 gap-y-2"
+      >
+        <ForecastPrediction
+          v-for="(prediction, i) in upcomingHours"
+          :key="`prediction_${i}`"
+          :time="prediction.time"
+          :prediction="prediction.values"
+        ></ForecastPrediction>
       </div>
     </div>
   </div>
