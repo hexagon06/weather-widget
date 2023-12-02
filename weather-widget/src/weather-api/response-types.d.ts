@@ -1,5 +1,4 @@
 // used https://transform.tools/json-to-typescript to generate the initial types
-// Did not rename this file to a .d.ts because it is very convenient to have the fieldnames next to the field definition.
 
 export interface WeatherResponse {
   data: WeatherData;
@@ -21,20 +20,6 @@ export interface Interval {
   startTime: string;
   values: WeatherValues;
 }
-// list the fields
-export const fieldNames = [
-  'precipitationIntensity',
-  'precipitationType',
-  'windSpeed',
-  'windGust',
-  'windDirection',
-  'temperature',
-  'temperatureApparent',
-  'cloudCover',
-  'cloudBase',
-  'cloudCeiling',
-  'weatherCode',
-];
 
 type FieldNames =
   | 'precipitationIntensity'

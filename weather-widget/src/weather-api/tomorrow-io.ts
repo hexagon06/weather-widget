@@ -1,38 +1,49 @@
-import moment from 'moment';
-import axios from 'axios';
-import { WeatherResponse, fieldNames } from './tomorrowio';
-import querystring from 'query-string';
+import axios, { AxiosResponse } from 'axios';
+import { WeatherResponse, WeatherValues } from './response-types';
 import { tomorrowioConfig } from './tomorrowio-config';
+import { paramsSerializer } from './params-serializer';
+import { RequestTiming, RequestLocation } from './request-types';
 
-// specify the timezone, using standard IANA timezone format
-const timezone = 'Europe/Amsterdam';
+// These functions should expose the tomorrow.io api
+// It should not contain any business logic, only the composition of the requests
+// It should make it clear for the rest of the application what values need to be provided
 
-const paramsSerializer = (params: Record<string, unknown>) =>
-  querystring.stringify(params, { arrayFormat: 'comma' });
-
-function getTiming() {
-  // configure the time frame up to 6 hours back and 15 days out
-  const now = moment.utc();
-  const startTime = moment.utc(now).add(0, 'minutes').toISOString();
-  const endTime = moment.utc(now).add(1, 'days').toISOString();
-  return { startTime, endTime };
-}
-
-export function getForecast(lat: number, long: number, timesteps: string[]) {
-  const location = [lat, long];
+/**
+ * Request the forecast for a location
+ *
+ * @param location Location for which we want the forcast in latitude and longitude
+ * @param timesteps Timesteps of the timelines: "best", "1m", "5m", "15m", "30m", "1h", "1d" or "current"
+ * @param timing The start and endtime of the forecast
+ * @param fields The data fields for each point in time
+ * @param timezone The timezone parameter displays the response datetime in the requested timezone.
+ * @returns A weather response
+ */
+export async function getForecast(
+  location: RequestLocation,
+  timesteps: string[],
+  timing: RequestTiming,
+  fields: (keyof WeatherValues)[],
+  timezone: string,
+) {
+  const { lat, long } = location;
   const { apikey, units } = tomorrowioConfig;
   const params = {
     apikey,
     units,
-    location,
-    fields: fieldNames,
+    location: [lat, long],
+    fields,
     timesteps,
-    ...getTiming(),
+    ...timing,
     timezone,
   };
 
-  return axios.get<WeatherResponse>(tomorrowioConfig.getTimelineURL, {
+  const response = await axios.get<
+    WeatherResponse,
+    AxiosResponse<WeatherResponse>
+  >(tomorrowioConfig.getTimelineURL, {
     params,
     paramsSerializer,
   });
+
+  return response.data;
 }
