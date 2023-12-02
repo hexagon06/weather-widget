@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Ref, computed } from 'vue';
 
 export function useReadableDateTime(isoDateTime: Ref<string>) {
@@ -11,13 +12,19 @@ export function useReadableDateTime(isoDateTime: Ref<string>) {
   }
 
   const readableTime = computed(() =>
-    emptyWenNotValid(() => date.value.toLocaleTimeString()),
+    emptyWenNotValid(() => `${date.value.getHours()}:00`),
   );
   const readableDate = computed(() =>
-    emptyWenNotValid(() => date.value.toLocaleDateString()),
+    emptyWenNotValid(() => {
+      const now = new Date(moment.now()).getDate();
+      const then = date.value.getDate();
+      if (now === then) return 'Today';
+      if (now + 1 === then) return 'Tomorrow';
+      return date.value.toLocaleDateString();
+    }),
   );
   const readableDateTime = computed(() =>
-    emptyWenNotValid(() => `${readableDate.value} ${readableTime.value}`),
+    emptyWenNotValid(() => `${readableDate.value} at ${readableTime.value}`),
   );
 
   return {

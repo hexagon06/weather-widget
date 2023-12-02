@@ -4,6 +4,7 @@ import { tomorrowioConfig } from './tomorrowio-config';
 import { paramsSerializer } from './params-serializer';
 import { RequestTiming, RequestLocation } from './request-types';
 import { ForecastResponse } from './tomorrowio-forecast';
+import { getCachedStuff } from '../testdata';
 
 const corsAnywhere = 'https://cors-anywhere.herokuapp.com/';
 
@@ -57,6 +58,10 @@ export async function getForecast(location: RequestLocation) {
     units,
     location,
   };
+
+  /** temp to not use up the rate limit of the API */
+  const temp = getCachedStuff(location);
+  if (temp !== null) return temp;
 
   const response = await axios.get<
     ForecastResponse,

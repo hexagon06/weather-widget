@@ -5,9 +5,9 @@ import { useReadableDateTime } from './readable-datetime';
 const props = defineProps<{ time: string }>();
 const time = toRef(props, 'time');
 
-const { readableDateTime } = useReadableDateTime(time);
+const { readableTime } = useReadableDateTime(time);
 </script>
 
 <template>
-  <span>{{ readableDateTime }}</span>
+  <span>{{ readableTime }}</span>
 </template>
