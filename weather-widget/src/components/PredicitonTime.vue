@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { toRef } from 'vue';
+import { useReadableDateTime } from './readable-datetime';
 
 const props = defineProps<{ time: string }>();
+const time = toRef(props, 'time');
 
-const date = computed(() => new Date(Date.parse(props.time)));
-
-const readableTime = computed(() => date.value.toLocaleTimeString());
-const readableDate = computed(() => date.value.toLocaleDateString());
+const { readableDateTime } = useReadableDateTime(time);
 </script>
 
 <template>
-  <span>{{ readableDate }}: {{ readableTime }}</span>
+  <span>{{ readableDateTime }}</span>
 </template>
