@@ -12,5 +12,8 @@
   ],
   "settings": {
     "editor.formatOnSave": true
+  },
+  "extensions": {
+    "recommendations": ["bradlc.vscode-tailwindcss"]
   }
 }
