@@ -27,6 +27,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
+          cache-dependency-path: weather-widget/yarn.lock
       - run: yarn install --frozen-lockfile
       - run: yarn test:once
       - run: yarn build
