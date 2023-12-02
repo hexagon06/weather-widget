@@ -4,6 +4,8 @@ import { tomorrowioConfig } from './tomorrowio-config';
 import { paramsSerializer } from './params-serializer';
 import { RequestTiming, RequestLocation } from './request-types';
 
+const corsAnywhere = 'https://cors-anywhere.herokuapp.com/';
+
 // These functions should expose the tomorrow.io api
 // It should not contain any business logic, only the composition of the requests
 // It should make it clear for the rest of the application what values need to be provided
@@ -40,7 +42,7 @@ export async function getForecast(
   const response = await axios.get<
     WeatherResponse,
     AxiosResponse<WeatherResponse>
-  >(tomorrowioConfig.getTimelineURL, {
+  >(`${corsAnywhere}${tomorrowioConfig.getTimelineURL}`, {
     params,
     paramsSerializer,
   });
