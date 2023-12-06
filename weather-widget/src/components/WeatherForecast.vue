@@ -83,7 +83,10 @@ const upcomingHours = computed(() => {
         <h1 class="text-left text-2xl font-bold mt-2 mb-3">
           {{ locationName }}
         </h1>
-        <div v-if="forecast" class="mt-3 flex justify-between bg-stone-600">
+        <div
+          v-if="forecast"
+          class="mt-3 flex justify-between bg-stone-600 min-h-[360px]"
+        >
           <div class="flex flex-col gap-2">
             <DayForecast
               v-if="selectedDay"
@@ -102,7 +105,11 @@ const upcomingHours = computed(() => {
             />
           </div>
         </div>
-        <DaySelection v-model="selectedDayTime" :days="selectableDays" />
+        <DaySelection
+          v-model="selectedDayTime"
+          :days="selectableDays"
+          class="mx-3"
+        />
       </template>
     </div>
   </div>
