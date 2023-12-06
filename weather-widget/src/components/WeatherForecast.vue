@@ -83,7 +83,7 @@ const upcomingHours = computed(() => {
       </div>
       <p v-else-if="failure">Oh noes! something went wrong</p>
       <template v-else>
-        <h1 class="text-left text-2xl font-bold mt-2 mb-3">
+        <h1 class="text-left text-2xl font-bold mt-2 mb-3 ml-1">
           {{ locationName }}
         </h1>
         <div
