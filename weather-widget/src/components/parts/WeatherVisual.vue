@@ -6,6 +6,7 @@ const props = defineProps<{
   code: number;
   sunIsUp: boolean;
   hideText?: boolean;
+  size?: 'md' | 'lg';
 }>();
 const { code, sunIsUp } = toRefs(props);
 
@@ -17,7 +18,11 @@ const icon = computed(() => {
 
 <template>
   <div class="flex gap-2 items-center">
-    <img :src="icon ?? ''" :alt="weatherVisual.alt" class="h-16" />
+    <img
+      :src="icon ?? ''"
+      :alt="weatherVisual.alt"
+      :class="[size === 'lg' ? 'h-24' : 'h-16']"
+    />
     <p
       v-if="!hideText"
       class="whitespace-nowrap overflow-hidden overflow-ellipsis"

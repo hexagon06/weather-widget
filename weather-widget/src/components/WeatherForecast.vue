@@ -48,9 +48,12 @@ const selectableDays = computed(() => {
 });
 
 const selectedDayTime = ref<string>('');
-const selectedDay = computed(() =>
-  days.value.find((d) => d.time === selectedDayTime.value),
-);
+const selectedDay = computed(() => {
+  const selected = days.value.find((d) => d.time === selectedDayTime.value);
+  if (selected) return selected;
+  const first = selectableDays.value[0];
+  return days.value.find((d) => d.time === first.time);
+});
 
 const hourlyInterval = 3;
 const upcomingHours = computed(() => {
@@ -85,16 +88,16 @@ const upcomingHours = computed(() => {
         </h1>
         <div
           v-if="forecast"
-          class="mt-3 flex justify-between bg-stone-600 min-h-[360px]"
+          class="mt-3 flex justify-stretch gap-3 bg-stone-600 min-h-[360px] py-2"
         >
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2 w-52 pl-2">
             <DayForecast
               v-if="selectedDay"
               :time="selectedDay.time"
               :day="selectedDay.values"
             />
           </div>
-          <div class="flex flex-col gap-2">
+          <div class="flex-grow flex flex-col gap-2">
             <HourForecast
               v-for="(prediction, i) in upcomingHours"
               :key="`prediction_${i}`"
