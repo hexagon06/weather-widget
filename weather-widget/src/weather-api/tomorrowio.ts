@@ -59,9 +59,11 @@ export async function getForecast(location: RequestLocation) {
     location,
   };
 
-  /** temp to not use up the rate limit of the API */
-  const temp = getCachedStuff(location);
-  if (temp !== null) return temp;
+  if (import.meta.env.DEV) {
+    /** temp to not use up the rate limit of the API */
+    const temp = getCachedStuff(location);
+    if (temp !== null) return temp as ForecastResponse;
+  }
 
   const response = await axios.get<
     ForecastResponse,

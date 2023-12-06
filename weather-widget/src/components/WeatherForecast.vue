@@ -18,7 +18,6 @@ async function refreshData() {
     if (location.value) {
       isLoading.value = true;
       const result = await getForecast(location.value);
-      // temp; this error shows up because of the temp data
       forecast.value = result.timelines;
       locationName.value = result.location.name;
       failure.value = false;
