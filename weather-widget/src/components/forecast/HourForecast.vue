@@ -18,7 +18,11 @@ const { isSunUp } = useDayNight(time);
     class="grid grid-cols-[1fr_2fr_1fr_.7fr] grid-flow-row gap-x-4 gap-y-2 items-center"
   >
     <PredicitonTime :time="time" class="text-lg" />
-    <WeatherVisual :code="prediction.weatherCode" :sun-is-up="isSunUp" />
+    <WeatherVisual
+      :code="prediction.weatherCode"
+      :sun-is-up="isSunUp"
+      class="max-w-full"
+    />
     <ForecastTemperature
       :temperature="prediction.temperature"
       :temperature-apparent="prediction.temperatureApparent"

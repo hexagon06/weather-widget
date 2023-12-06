@@ -2,7 +2,11 @@
 import { computed, toRefs } from 'vue';
 import { useWeatherVisual } from '../../composables/weather-visual';
 
-const props = defineProps<{ code: number; sunIsUp: boolean }>();
+const props = defineProps<{
+  code: number;
+  sunIsUp: boolean;
+  hideText?: boolean;
+}>();
 const { code, sunIsUp } = toRefs(props);
 
 const { weatherVisual } = useWeatherVisual(code);
@@ -15,6 +19,7 @@ const icon = computed(() => {
   <div class="flex gap-2 items-center">
     <img :src="icon ?? ''" :alt="weatherVisual.alt" class="h-16" />
     <p
+      v-if="!hideText"
       class="whitespace-nowrap overflow-hidden overflow-ellipsis"
       :title="weatherVisual.text"
     >

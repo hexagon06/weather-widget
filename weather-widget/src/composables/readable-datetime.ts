@@ -21,7 +21,7 @@ export function useReadableDateTime(isoDateTime: Ref<string>) {
       const then = date.value.getDate();
       if (now === then) return 'Today';
       if (now + 1 === then) return 'Tomorrow';
-      return date.value.toLocaleDateString();
+      return date.value.toLocaleDateString(undefined, { weekday: 'short' });
     }),
   );
   const readableDateTime = computed(() =>
