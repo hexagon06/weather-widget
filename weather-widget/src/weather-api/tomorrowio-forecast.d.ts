@@ -11,10 +11,10 @@ export interface Timelines {
 
 export interface Hourly {
   time: string;
-  values: Values;
+  values: HourlyValues;
 }
 
-export interface Values {
+export interface HourlyValues {
   cloudBase?: number;
   cloudCeiling?: number;
   cloudCover: number;
@@ -48,10 +48,10 @@ export interface Values {
 
 export interface Minutely {
   time: string;
-  values: Values2;
+  values: MinutelyValues;
 }
 
-export interface Values2 {
+export interface MinutelyValues {
   cloudBase: number;
   cloudCeiling: number;
   cloudCover: number;
@@ -76,10 +76,10 @@ export interface Values2 {
 
 export interface Daily {
   time: string;
-  values: Values3;
+  values: DailyValues;
 }
 
-export interface Values3 {
+export interface DailyValues {
   cloudBaseAvg: number;
   cloudBaseMax: number;
   cloudBaseMin: number;
