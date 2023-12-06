@@ -2,18 +2,21 @@
 import { computed, ref, watch } from 'vue';
 import { getForecast } from '../weather-api/tomorrowio';
 import { Timelines } from '../weather-api/tomorrowio-forecast';
-import ForecastPrediction from './forecast/ForecastPrediction.vue';
-import LocationPicker from './LocationPicker.vue';
+import HourForecast from './forecast/HourForecast.vue';
+import LocationPicker from './parts/LocationPicker.vue';
+import LoadingIndicator from './parts/LoadingIndicator.vue';
 
 const failure = ref(false);
 const forecast = ref<Timelines | undefined>();
 const location = ref<string | null>(null);
 watch(location, () => refreshData());
 const locationName = ref<string>();
+const isLoading = ref(false);
 
 async function refreshData() {
   try {
     if (location.value) {
+      isLoading.value = true;
       const result = await getForecast(location.value);
       // temp; this error shows up because of the temp data
       forecast.value = result.timelines;
@@ -22,6 +25,8 @@ async function refreshData() {
     }
   } catch (e) {
     failure.value = true;
+  } finally {
+    isLoading.value = false;
   }
 }
 
@@ -32,29 +37,29 @@ const upcomingHours = computed(
       .filter((_, i) => i % hourlyInterval === 0)
       .slice(0, 6),
 );
-
-// const forecastDays = computed(() => {
-//   return forecast.value?.daily;
-// });
 </script>
 
 <template>
   <div class="max-w-[720px] bg-slate-300 bg-opacity-25 rounded-xl p-4">
     <LocationPicker v-model="location" />
-    <p class="text-2xl font-bold">{{ locationName }}</p>
-    <p v-if="failure">Oh noes! something went wrong</p>
-    <div v-if="forecast" class="mt-3 flex flex-col">
-      <div
-        class="grid grid-rows-[1fr_150px_2fr_1fr] grid-flow-col gap-x-4 gap-y-2"
-      >
-        <ForecastPrediction
-          v-for="(prediction, i) in upcomingHours"
-          :key="`prediction_${i}`"
-          :time="prediction.time"
-          :prediction="prediction.values"
-        />
+    <div class="flex flex-col justify-center bg-stone-500 bg-opacity-50 p-1">
+      <div v-if="isLoading" class="flex justify-center">
+        <LoadingIndicator />
       </div>
-      <!-- <div v-if="forecastDays">
+      <p v-else-if="failure">Oh noes! something went wrong</p>
+      <template v-else>
+        <h1 class="text-2xl font-bold mt-2">{{ locationName }}</h1>
+        <div v-if="forecast" class="mt-3 flex flex-col gap-2">
+          <HourForecast
+            v-for="(prediction, i) in upcomingHours"
+            :key="`prediction_${i}`"
+            :time="prediction.time"
+            :prediction="prediction.values"
+            class="bg-opacity-25"
+            :class="i % 2 === 0 ? ['bg-stone-700'] : ['bg-slate-700']"
+          />
+
+          <!-- <div v-if="forecastDays">
         <div v-for="(day, i) in forecastDays" :key="`day_${i}`">
           <p>{{ day.time }}</p>
           <div
@@ -65,6 +70,8 @@ const upcomingHours = computed(
           </div>
         </div>
       </div> -->
+        </div>
+      </template>
     </div>
   </div>
 </template>
