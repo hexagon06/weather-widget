@@ -21,9 +21,7 @@ async function refreshData() {
       isLoading.value = true;
       const result = await getForecast(location.value);
       forecast.value = result.timelines;
-      if (selectedDayTime.value === '') {
-        selectedDayTime.value = result.timelines.daily[0].time;
-      }
+      selectedDayTime.value = result.timelines.daily[0].time;
       locationName.value = result.location.name;
       failure.value = false;
     }
