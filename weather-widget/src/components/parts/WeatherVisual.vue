@@ -14,7 +14,10 @@ const icon = computed(() => {
 <template>
   <div class="flex gap-2 items-center">
     <img :src="icon ?? ''" :alt="weatherVisual.alt" class="h-16" />
-    <p class="whitespace-nowrap overflow-ellipsis" :title="weatherVisual.text">
+    <p
+      class="whitespace-nowrap overflow-hidden overflow-ellipsis"
+      :title="weatherVisual.text"
+    >
       {{ weatherVisual.text }}
     </p>
   </div>
