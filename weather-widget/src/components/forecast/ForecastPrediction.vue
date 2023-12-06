@@ -20,19 +20,14 @@ const isSunUp = computed(() => {
 <template>
   <h3><PredicitonTime :time="time" /></h3>
   <WeatherVisual :code="prediction.weatherCode" :sun-is-up="isSunUp" />
-  <div>
-    <b class="text-xl">{{ prediction.temperature }}°C</b>
-    <sub class="ml-1">{{ prediction.temperatureApparent }}°C</sub>
+  <div class="flex flex-col gap-2">
+    <b class="text-xl" title="temperature">{{ prediction.temperature }}°C</b>
+    <sub class="ml-1" title="Feels like">
+      {{ prediction.temperatureApparent }}°C
+    </sub>
   </div>
   <WindVisual
     :direction="prediction.windDirection"
     :speed="prediction.windSpeed"
   />
-  <!-- <div>
-    <template v-for="key in Object.keys(prediction)">
-      <div v-if="prediction[key as keyof Values] !== 0" :key="key">
-        <b>{{ key }}:</b> {{ prediction[key as keyof Values] }}
-      </div>
-    </template>
-  </div> -->
 </template>

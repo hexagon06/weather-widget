@@ -62,9 +62,6 @@ export function useWeatherVisual(code: Ref<number>) {
       };
     }
   });
-  // const day = computed(() => match.value?.day ?? null);
-  // const day = computed(() => match.value?.day ?? null);
-  // const alt = computed(() => match.value?.alt ?? `${code.value}`);
 
   return {
     weatherVisual,

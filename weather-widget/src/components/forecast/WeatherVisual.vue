@@ -7,8 +7,7 @@ const { code, sunIsUp } = toRefs(props);
 
 const { weatherVisual } = useWeatherVisual(code);
 const icon = computed(() => {
-  if (sunIsUp.value) return weatherVisual.value.day;
-  return weatherVisual.value.night;
+  return sunIsUp.value ? weatherVisual.value.day : weatherVisual.value.night;
 });
 </script>
 

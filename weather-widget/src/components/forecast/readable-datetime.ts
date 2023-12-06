@@ -11,9 +11,10 @@ export function useReadableDateTime(isoDateTime: Ref<string>) {
     return isValid.value ? fn() : '';
   }
 
-  const readableTime = computed(() =>
-    emptyWenNotValid(() => `${date.value.getHours()}:00`),
-  );
+  const readableTime = computed(() => {
+    const hours = date.value.getHours();
+    return emptyWenNotValid(() => `${hours < 10 ? 0 : ''}${hours}:00`);
+  });
   const readableDate = computed(() =>
     emptyWenNotValid(() => {
       const now = new Date(moment.now()).getDate();
