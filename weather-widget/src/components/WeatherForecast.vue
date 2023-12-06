@@ -1,80 +1,38 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { getForecast } from '../weather-api/tomorrowio';
-import { Daily, Timelines } from '../weather-api/tomorrowio-forecast';
+import { onMounted, ref } from 'vue';
 import DayForecast from './forecast/DayForecast.vue';
 import HourForecast from './forecast/HourForecast.vue';
 import LocationPicker from './parts/LocationPicker.vue';
 import LoadingIndicator from './parts/LoadingIndicator.vue';
 import DaySelection from './parts/DaySelection.vue';
+import { useForecastSelection } from '../composables/forecast-selection';
+import { useDaySelection } from '../composables/day-selection';
+import { useHourlyForecasts } from '../composables/hourly-forecasts';
 
-const failure = ref(false);
-const forecast = ref<Timelines | undefined>();
+const locations = [
+  'Amsterdam',
+  'Groningen',
+  'New York',
+  'Salvador',
+  'Mumbai',
+  'Hong Kong',
+];
+
 const location = ref<string | null>(null);
-watch(location, () => refreshData());
-const locationName = ref<string>();
-const isLoading = ref(false);
+onMounted(() => (location.value = locations[1]));
 
-async function refreshData() {
-  try {
-    if (location.value) {
-      isLoading.value = true;
-      const result = await getForecast(location.value);
-      forecast.value = result.timelines;
-      selectedDayTime.value = result.timelines.daily[0].time;
-      locationName.value = result.location.name;
-      failure.value = false;
-    }
-  } catch (e) {
-    failure.value = true;
-  } finally {
-    isLoading.value = false;
-  }
-}
+const { isLoading, failure, forecast, locationName } =
+  useForecastSelection(location);
 
-function sortByDay(a: Daily, b: Daily) {
-  return Date.parse(a.time) - Date.parse(b.time);
-}
-const days = computed(() => {
-  return forecast.value?.daily.slice().sort(sortByDay).slice(0, 6) ?? [];
-});
-const selectableDays = computed(() => {
-  return days.value.map((d) => ({
-    time: d.time,
-    code: d.values.weatherCodeMin,
-  }));
-});
+const { selectedDayTime, selectedDay, selectableDays } =
+  useDaySelection(forecast);
 
-const selectedDayTime = ref<string>('');
-const selectedDay = computed(() => {
-  const selected = days.value.find((d) => d.time === selectedDayTime.value);
-  if (selected) return selected;
-  const first = selectableDays.value[0];
-  return days.value.find((d) => d.time === first.time);
-});
-
-const hourlyInterval = 3;
-const upcomingHours = computed(() => {
-  let start = 0,
-    end = 6;
-  if (selectedDayTime.value !== '') {
-    const selectedTime = Date.parse(selectedDayTime.value);
-    start =
-      forecast.value?.hourly.findIndex(
-        (h) => Date.parse(h.time) >= selectedTime,
-      ) ?? 0;
-    end = 6 + start;
-  }
-
-  return forecast.value?.hourly
-    .filter((_, i) => i % hourlyInterval === 0)
-    .slice(start, end);
-});
+const { hourValues } = useHourlyForecasts(forecast, selectedDayTime);
 </script>
 
 <template>
   <div class="bg-slate-300 bg-opacity-25 rounded-xl p-4">
-    <LocationPicker v-model="location" />
+    <LocationPicker v-model="location" :locations="locations" />
     <div class="flex flex-col justify-center bg-stone-500 bg-opacity-50 p-1">
       <div v-if="isLoading" class="flex justify-center">
         <LoadingIndicator />
@@ -97,7 +55,7 @@ const upcomingHours = computed(() => {
           </div>
           <div class="flex-grow flex flex-col gap-2">
             <HourForecast
-              v-for="(prediction, i) in upcomingHours"
+              v-for="(prediction, i) in hourValues"
               :key="`prediction_${i}`"
               :time="prediction.time"
               :prediction="prediction.values"
