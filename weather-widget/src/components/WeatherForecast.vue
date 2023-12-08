@@ -37,6 +37,10 @@ const { hourValues } = useHourlyForecasts(forecast, selectedDayTime);
       <div v-if="isLoading" class="flex justify-center">
         <LoadingIndicator />
       </div>
+      <p v-else-if="failure === 'bad'">
+        Oh noes! something went wrong. please make sure you have access
+        <a href="https://cors-anywhere.herokuapp.com/" target="_blank">here</a>
+      </p>
       <p v-else-if="failure">Oh noes! something went wrong</p>
       <template v-else>
         <h1 class="text-left text-2xl font-bold mt-2 mb-3 ml-1">
